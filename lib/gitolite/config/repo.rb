@@ -17,6 +17,7 @@ module Gitolite
         @name = name
         @config = {} #git config
         @options = {} #gitolite config
+        @vref = {} # gitolite vref config
       end
 
       def clean_permissions
@@ -53,6 +54,14 @@ module Gitolite
         @options.delete(key)
       end
 
+      def set_gitolite_vref(key, value)
+        @vref[key] = value
+      end
+
+      def unset_gitolite_vref(key, value)
+        @vref.delete(key)
+      end
+
       def to_s
         repo = "repo    #{@name}\n"
 
@@ -70,6 +79,10 @@ module Gitolite
 
         @options.each do |k, v|
           repo += "  option " + k + " = " + v + "\n"
+        end
+
+        @vref.each do |k,v|
+          repo += "  - #{k} = #{v}\n"
         end
 
         repo

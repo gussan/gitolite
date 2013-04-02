@@ -148,6 +148,13 @@ module Gitolite
               context.each do |c|
                 @repos[c].set_gitolite_option(key, value)
               end
+            # gitolite VREF definition
+            when /^\-\s+(.+) = (.*)/
+              key = $1
+              vref = $2
+              context.each do |c|
+                @repos[c].set_gitolite_vref(key, value)
+              end
             #group definition
             when /^#{Group::PREPEND_CHAR}(\S+) = ?(.*)/
               group = $1
