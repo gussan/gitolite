@@ -121,6 +121,13 @@ module Gitolite
 
                 @repos[r] = Repo.new(r) unless has_repo?(r)
               end
+            # gitolite VREF definition
+            when /^\-\s+(VREF.+) = (.*)/
+              key = $1
+              value = $2
+              context.each do |c|
+                @repos[c].set_gitolite_vref(key, value)
+              end
             #repo permissions
             when /^(-|C|R|RW\+?(?:C?D?|D?C?)M?) (.* )?= (.+)/
               perm = $1
@@ -147,13 +154,6 @@ module Gitolite
 
               context.each do |c|
                 @repos[c].set_gitolite_option(key, value)
-              end
-            # gitolite VREF definition
-            when /^\-\s+(.+) = (.*)/
-              key = $1
-              vref = $2
-              context.each do |c|
-                @repos[c].set_gitolite_vref(key, value)
               end
             #group definition
             when /^#{Group::PREPEND_CHAR}(\S+) = ?(.*)/
